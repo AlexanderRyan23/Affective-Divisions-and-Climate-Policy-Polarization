@@ -1147,8 +1147,6 @@ gr combine AP_Distance.gph Divergence.gph Climate_Attitudes.gph, ycommon
 sort Wave
 bysort Wave: egen Main_Env = corr(Mainstream_B Env_Growth)
 
-levelsof Date if Wave==7 | Wave==15 | Wave==19, local(wavedates)
-
 summ Date if Wave==7, meanonly
 local d7 = r(mean)
 
@@ -1157,8 +1155,6 @@ local d15 = r(mean)
 
 summ Date if Wave==19, meanonly
 local d19 = r(mean)
-
-local ylab = r(max)*0.95
 
 twoway ///
     (line Corr_Env Date if inrange(Date, td(01oct2016), td(16jan2025))) ///

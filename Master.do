@@ -231,29 +231,6 @@ forvalues w = 10/29 {
 
 replace Env_Growth = 8-kp_1290 if inrange(kp_1290,1,7) & inrange(Wave,1,9)
 
-* Demographic variables. These variables are not included in the main analyses 
-
-recode kpx_2280(1=0)(2=1), gen(Gender)
-label define Gender_Lab 0 "Men" 1 "Women"
-label values Gender Gender_Lab
-
-* This is done for gender and age to assign a value across all waves on the basis of the last recorded value on the gender variable. Use "gender_impute if you want values of gender on all waves"
-
-bysort lfdn (Wave): gen Wave_Order = _n if Gender !=.
-bysort lfdn: egen max_gender = max(Wave_Order)
-gen gender_impute_1 = Gender if Wave_Order == max_gender
-bysort lfdn: egen gender_impute_2 = mean(gender_impute_1) 
-gen gender_impute = gender_impute_2 if Gender ==.
-replace gender_impute = Gender if Gender !=.
-
-
-* Recoding errors in the variable for year of birth
-replace kpx_2290s = "1955" if kpx_2290s == "1955 und frueher"
-replace kpx_2290s = "" if kpx_2290s == "."
-destring kpx_2290s, gen(Year_Birth)
-
-describe kpx_2290s Year_Birth
-
 * Region of residence. We assign values from wave 15 to observations during waves 16 to 19 when it is missing. 
 
 gen Region =.
